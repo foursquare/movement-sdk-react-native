@@ -1,4 +1,4 @@
 import { NativeModules } from 'react-native'
 
-const PilgrimSdk = NativeModules.RNPilgrimSdk
-export default PilgrimSdk
+const MovementSdk = NativeModules.RNMovementSdk
+export default MovementSdk

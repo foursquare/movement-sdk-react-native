@@ -1,4 +1,4 @@
-//  Copyright © 2019 Foursquare Labs. All rights reserved.
+//  Copyright © 2023 Foursquare Labs. All rights reserved.
 
 #if __has_include("RCTBridgeModule.h")
 #import "RCTBridgeModule.h"
@@ -6,7 +6,7 @@
 #import <React/RCTBridgeModule.h>
 #endif
 
-@interface RNPilgrimSdk : NSObject <RCTBridgeModule>
+@interface RNMovementSdk : NSObject <RCTBridgeModule>
 
 @end
   

@@ -1,8 +1,8 @@
 {
-  "name": "@foursquare/pilgrim-sdk-react-native",
+  "name": "@foursquare/movement-sdk-react-native",
   "homepage": "https://enterprise.foursquare.com/products/pilgrim",
-  "version": "1.2.0",
-  "description": "React native wrapper for the Pilgrim SDK",
+  "version": "4.0.0",
+  "description": "React native wrapper for the Movement SDK",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/foursquare/pilgrim-sdk-react-native.git"
+    "url": "https://github.com/foursquare/movement-sdk-react-native.git"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.0.2",
@@ -24,6 +24,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react-native": "^4.0.0",
     "prettier": "^2.0.5",
+    "react-native": "0.69.2",
     "typescript": "^4.5.2"
   },
   "resolutions": {

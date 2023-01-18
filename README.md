@@ -1,45 +1,47 @@
+# Movment SDK React Native module
 
-# Pilgrim SDK React Native module
-
-[![CircleCI](https://circleci.com/gh/foursquare/pilgrim-sdk-react-native.svg?style=svg)](https://circleci.com/gh/foursquare/pilgrim-sdk-react-native)
+[![CircleCI](https://circleci.com/gh/foursquare/movment-sdk-react-native.svg?style=svg)](https://circleci.com/gh/foursquare/movment-sdk-react-native)
 
 ## Table of Contents
-* [Installing](#installing)
-* [Usage](#usage)
-    * [Application Setup](#application-setup)
-    * [Getting User's Current Location](#getting-users-current-location)
-    * [Passive Location Detection](#passive-location-detection)
-    * [Debug Screen](#debug-screen)
-    * [Test Visits](#test-visits)
-* [Samples](#samples)
-* [FAQ](#faq)
+
+- [Installing](#installing)
+- [Usage](#usage)
+  - [Application Setup](#application-setup)
+  - [Getting User's Current Location](#getting-users-current-location)
+  - [Passive Location Detection](#passive-location-detection)
+  - [Debug Screen](#debug-screen)
+  - [Test Visits](#test-visits)
+- [Samples](#samples)
+- [FAQ](#faq)
 
 ## Installing
 
 1. Install module
 
-    npm
-    ```bash
-    npm install @foursquare/pilgrim-sdk-react-native
-    ```
+   npm
 
-    Yarn
-    ```bash
-    yarn add @foursquare/pilgrim-sdk-react-native
-    ```
+   ```bash
+   npm install @foursquare/movment-sdk-react-native
+   ```
+
+   Yarn
+
+   ```bash
+   yarn add @foursquare/movment-sdk-react-native
+   ```
 
 2. Link native code
 
-    With [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) (react-native 0.60+) 
-
-    ```bash
-    cd ios && pod install && cd .. 
-    ```
-
-    Pre 0.60
+   With [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) (react-native 0.60+)
 
    ```bash
-   react-native link @foursquare/pilgrim-sdk-react-native
+   cd ios && pod install && cd ..
+   ```
+
+   Pre 0.60
+
+   ```bash
+   react-native link @foursquare/movment-sdk-react-native
    ```
 
 ## Usage
@@ -48,7 +50,7 @@
 
 #### iOS Setup
 
-You must call `[[FSQPPilgrimManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
+You must call `[[FSQPMovementManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
 
 ```objc
 // AppDelegate.m
@@ -57,20 +59,20 @@ You must call `[[FSQPPilgrimManager sharedManager] configureWithConsumerKey:secr
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <Pilgrim/Pilgrim.h>
+#import <Movement/Movement.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [[FSQPPilgrimManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
+  [[FSQPMovementManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
                                                         secret:@"CONSUMER_SECRET"
                                                       delegate:nil
                                                     completion:nil];
 
-  
+
   // Other react native initialization code
-  
+
   return YES;
 }
 
@@ -82,13 +84,13 @@ You must call `[[FSQPPilgrimManager sharedManager] configureWithConsumerKey:secr
 
 #### Android Setup
 
-You must call `PilgrimSdk.with(PilgrimSdk.Builder)` from `onCreate` in a your `android.app.Application` subclass, for example:
+You must call `MovementSdk.with(MovementSdk.Builder)` from `onCreate` in a your `android.app.Application` subclass, for example:
 
 ```java
 // MainApplication.java
 import android.app.Application;
 import com.facebook.react.ReactApplication;
-import com.foursquare.pilgrim.PilgrimSdk;
+import com.foursquare.movement.MovementSdk;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -96,10 +98,10 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
 
-    PilgrimSdk.Builder builder = new PilgrimSdk.Builder(this)
+    MovementSdk.Builder builder = new MovementSdk.Builder(this)
             .consumer("CONSUMER_KEY", "CONSUMER_SECRET")
             .enableDebugLogs();
-    PilgrimSdk.with(builder);
+    MovementSdk.with(builder);
 
     // Other react native initialization code
   }
@@ -112,175 +114,200 @@ public class MainApplication extends Application implements ReactApplication {
 #### Basic Usage
 
 ```javascript
-import React, { Component } from 'react';
-import { Text } from 'react-native';
-import PilgrimSdk from '@foursquare/pilgrim-sdk-react-native';
+import React, { Component } from 'react'
+import { Text } from 'react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native'
 
 export default class Screen extends Component {
-    state = {
-        installId: "-",
-    };
+  state = {
+    installId: '-',
+  }
 
-    componentDidMount() {
-        PilgrimSdk.getInstallId().then(installId => {
-            this.setState({ installId: installId });
-        });
-    }
+  componentDidMount() {
+    MovementSdk.getInstallId().then((installId) => {
+      this.setState({ installId: installId })
+    })
+  }
 
-    render() {
-        return (
-            <>
-                <Text>Install ID: {this.state.installId}</Text>
-            </>
-        );
-    }
+  render() {
+    return (
+      <>
+        <Text>Install ID: {this.state.installId}</Text>
+      </>
+    )
+  }
 }
 ```
 
 ### Getting User's Current Location
 
-You can actively request the current location of the user by calling the `PilgrimSdk.getCurrentLocation` method.  The return value will be a `Promise<CurrentLocation>`.  The `CurrentLocation` object has the current venue the device is most likely at as well as any geofences that the device is in (if configured). More information [here](https://developer.foursquare.com/docs/pilgrim-sdk/quickstart#get-current-location). Example usage below:
+You can actively request the current location of the user by calling the `MovementSdk.getCurrentLocation` method. The return value will be a `Promise<CurrentLocation>`. The `CurrentLocation` object has the current venue the device is most likely at as well as any geofences that the device is in (if configured). More information [here](https://developer.foursquare.com/docs/pilgrim-sdk/quickstart#get-current-location). Example usage below:
 
 ```javascript
-import React, { Component } from 'react';
-import { Alert, Text } from 'react-native';
-import PilgrimSdk from '@foursquare/pilgrim-sdk-react-native';
+import React, { Component } from 'react'
+import { Alert, Text } from 'react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native'
 
 export default class Screen extends Component {
-    state = {
-        currentLocation: null
-    };
+  state = {
+    currentLocation: null,
+  }
 
-    getCurrentLocation = async function () {
-        try {
-            const currentLocation = await PilgrimSdk.getCurrentLocation();
-            this.setState({ currentLocation: currentLocation });
-        } catch (e) {
-            Alert.alert("Pilgrim SDK", `${e}`);
-        }
+  getCurrentLocation = async function () {
+    try {
+      const currentLocation = await MovementSdk.getCurrentLocation()
+      this.setState({ currentLocation: currentLocation })
+    } catch (e) {
+      Alert.alert('Movement SDK', `${e}`)
     }
+  }
 
-    componentDidMount() {
-        this.getCurrentLocation();
-    }
+  componentDidMount() {
+    this.getCurrentLocation()
+  }
 
-    render() {
-        if (this.state.currentLocation != null) {
-            const venue = this.state.currentLocation.currentPlace.venue;
-            const venueName = venue.name || "Unnamed venue";
-            return (
-                <>
-                    <Text>Venue: {venueName}</Text>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <Text>Loading...</Text>
-                </>
-            );
-        }
+  render() {
+    if (this.state.currentLocation != null) {
+      const venue = this.state.currentLocation.currentPlace.venue
+      const venueName = venue.name || 'Unnamed venue'
+      return (
+        <>
+          <Text>Venue: {venueName}</Text>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Text>Loading...</Text>
+        </>
+      )
     }
+  }
 }
 ```
 
 ### Passive Location Detection
 
-Passive location detection is controlled with the `PilgrimSdk.start` and `PilgrimSdk.stop` methods. When started Pilgrim SDK will send notifications to [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations).  Example usage below:
+Passive location detection is controlled with the `MovementSdk.start` and `MovementSdk.stop` methods. When started Movement SDK will send notifications to [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations). Example usage below:
 
 ```javascript
-import React, { Component } from 'react';
-import { Alert, Button } from 'react-native';
-import PilgrimSdk from '@foursquare/pilgrim-sdk-react-native';
+import React, { Component } from 'react'
+import { Alert, Button } from 'react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native'
 
 export default class Screen extends Component {
-    startPilgrim = async function () {
-        const canEnable = await PilgrimSdk.canEnable();
-        const isSupportedDevice = await PilgrimSdk.isSupportedDevice();
-        if (canEnable && isSupportedDevice) {
-            PilgrimSdk.start();
-            Alert.alert("Pilrim SDK", "Pilgrim started");
-        } else {
-            Alert.alert("Pilrim SDK", "Error starting");
-        }
+  startMovement = async function () {
+    const canEnable = await MovementSdk.canEnable()
+    const isSupportedDevice = await MovementSdk.isSupportedDevice()
+    if (canEnable && isSupportedDevice) {
+      MovementSdk.start()
+      Alert.alert('Movement SDK', 'Movement SDK started')
+    } else {
+      Alert.alert('Movement SDK', 'Error starting')
     }
+  }
 
-    stopPilgrim = function () {
-        PilgrimSdk.stop();
-        Alert.alert("Pilrim SDK", "Pilgrim stopped");
-    }
+  stopMovement = function () {
+    MovementSdk.stop()
+    Alert.alert('Movement SDK', 'Movement SDK stopped')
+  }
 
-    render() {
-        return (
-            <>
-                <Button title="Start" onPress={() => { this.startPilgrim(); }} />
-                <Button title="Stop" onPress={() => { this.stopPilgrim(); }} />
-            </>
-        );
-    }
+  render() {
+    return (
+      <>
+        <Button
+          title="Start"
+          onPress={() => {
+            this.startMovement()
+          }}
+        />
+        <Button
+          title="Stop"
+          onPress={() => {
+            this.stopMovement()
+          }}
+        />
+      </>
+    )
+  }
 }
 ```
 
 ### Debug Screen
 
-The debug screen is shown using the `PilgrimSdk.showDebugScreen` method. This screen contains logs sent from Pilgrim SDK and other debugging tools/information. Example usage below:
-
+The debug screen is shown using the `MovementSdk.showDebugScreen` method. This screen contains logs sent from the Movement SDK and other debugging tools/information. Example usage below:
 
 ```javascript
-import React, { Component } from 'react';
-import { Button } from 'react-native';
-import PilgrimSdk from '@foursquare/pilgrim-sdk-react-native';
+import React, { Component } from 'react'
+import { Button } from 'react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native'
 
 export default class Screen extends Component {
-    showDebugScreen = function () {
-        PilgrimSdk.showDebugScreen();
-    }
+  showDebugScreen = function () {
+    MovementSdk.showDebugScreen()
+  }
 
-    render() {
-        return (
-            <>
-                <Button title="Show Debug Screen" onPress={() => { this.showDebugScreen(); }} />
-            </>
-        );
-    }
+  render() {
+    return (
+      <>
+        <Button
+          title="Show Debug Screen"
+          onPress={() => {
+            this.showDebugScreen()
+          }}
+        />
+      </>
+    )
+  }
 }
 ```
 
 ### Test Visits
 
-Test arrival visits can be fired with the method `PilgrimSdk.fireTestVisit`. You must pass a location to be used for the test visit. The arrival notification will be received via [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations)
+Test arrival visits can be fired with the method `MovementSdk.fireTestVisit`. You must pass a location to be used for the test visit. The arrival notification will be received via [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations)
 
 ```javascript
-import React, { Component } from 'react';
-import { Button } from 'react-native';
-import PilgrimSdk from '@foursquare/pilgrim-sdk-react-native';
+import React, { Component } from 'react'
+import { Button } from 'react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native'
 
 export default class Screen extends Component {
-    fireTestVisit = async function () {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            PilgrimSdk.fireTestVisit(latitude, longitude);
-            Alert.alert("Pilgrim SDK", `Sent test visit with location: (${latitude},${longitude})`);
-        }, err => {
-            Alert.alert("Pilgrim SDK", `${err}`);
-        });
-    }
+  fireTestVisit = async function () {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude
+        const longitude = position.coords.longitude
+        MovementSdk.fireTestVisit(latitude, longitude)
+        Alert.alert(
+          'Movement SDK',
+          `Sent test visit with location: (${latitude},${longitude})`
+        )
+      },
+      (err) => {
+        Alert.alert('Movement SDK', `${err}`)
+      }
+    )
+  }
 
-    render() {
-        return (
-            <>
-                <Button title="Fire Test Visit" onPress={() => { this.fireTestVisit(); }} />
-            </>
-        );
-    }
+  render() {
+    return (
+      <>
+        <Button
+          title="Fire Test Visit"
+          onPress={() => {
+            this.fireTestVisit()
+          }}
+        />
+      </>
+    )
+  }
 }
 ```
 
 ## Samples
 
-* [React Native Pilgrim SDK Sample App](https://github.com/foursquare/RNPilgrimSample) - Basic application using pilgrim-sdk-react-native
+- [React Native Movement SDK Sample App](https://github.com/foursquare/RNMovementSample) - Basic application using movement-sdk-react-native
 
 ## FAQ
 
-Consult the Pilgrim documentation [here](https://developer.foursquare.com/docs/pilgrim-sdk/FAQ)
+Consult Movement SDK documentation [here](https://developer.foursquare.com/docs/pilgrim-sdk/FAQ)

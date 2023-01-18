@@ -1,4 +1,4 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
 #import "CLLocation+JSON.h"
 

@@ -1,17 +1,17 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
-#import "FSQPCurrentLocation+JSON.h"
-#import "FSQPGeofenceEvent+JSON.h"
-#import "FSQPVisit+JSON.h"
+#import "FSQCurrentLocation+JSON.h"
+#import "FSQGeofenceEvent+JSON.h"
+#import "FSQVisit+JSON.h"
 
-@implementation FSQPCurrentLocation (JSON)
+@implementation FSQCurrentLocation (JSON)
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
     jsonDict[@"currentPlace"] = [self.currentPlace json];
 
     NSMutableArray *geofences = [NSMutableArray array];
-    for (FSQPGeofenceEvent *event in self.matchedGeofences) {
+    for (FSQGeofenceEvent *event in self.matchedGeofences) {
         [geofences addObject:[event json]];
     }
     jsonDict[@"matchedGeofences"] = geofences;

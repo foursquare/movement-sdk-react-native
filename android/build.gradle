@@ -7,10 +7,12 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 33
@@ -27,7 +29,17 @@ android {
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url("$rootDir/../node_modules/react-native/android")
+    }
+    mavenCentral() {
+        // We don't want to fetch react-native from Maven Central as there are
+        // older versions over there.
+        content {
+            excludeGroup "com.facebook.react"
+        }
+    }
     google()
     maven {
         url 'https://foursquare.jfrog.io/foursquare/libs-release/'
@@ -36,7 +48,7 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.foursquare:pilgrimsdk:3.4.0'
-    implementation 'com.foursquare:pilgrimsdk-debugging:3.4.0'
+    api 'com.foursquare:movementsdk:4.0.0-SNAPSHOT'
+    api 'com.foursquare:movementsdk-debugging:4.0.0-SNAPSHOT'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
 }
