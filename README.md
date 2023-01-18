@@ -1,6 +1,6 @@
-# Movment SDK React Native module
+# Movement SDK React Native module
 
-[![CircleCI](https://circleci.com/gh/foursquare/movment-sdk-react-native.svg?style=svg)](https://circleci.com/gh/foursquare/movment-sdk-react-native)
+[![CircleCI](https://circleci.com/gh/foursquare/movement-sdk-react-native.svg?style=svg)](https://circleci.com/gh/foursquare/pilgrim-sdk-react-native)
 
 ## Table of Contents
 
@@ -21,13 +21,13 @@
    npm
 
    ```bash
-   npm install @foursquare/movment-sdk-react-native
+   npm install @foursquare/movement-sdk-react-native
    ```
 
    Yarn
 
    ```bash
-   yarn add @foursquare/movment-sdk-react-native
+   yarn add @foursquare/movement-sdk-react-native
    ```
 
 2. Link native code
@@ -41,7 +41,7 @@
    Pre 0.60
 
    ```bash
-   react-native link @foursquare/movment-sdk-react-native
+   react-native link @foursquare/movement-sdk-react-native
    ```
 
 ## Usage
