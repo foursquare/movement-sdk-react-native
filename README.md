@@ -1,6 +1,6 @@
 # Movement SDK React Native module
 
-[![CircleCI](https://circleci.com/gh/foursquare/movement-sdk-react-native.svg?style=svg)](https://circleci.com/gh/foursquare/pilgrim-sdk-react-native)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/foursquare/movement-sdk-react-native/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/foursquare/movement-sdk-react-native/tree/main)
 
 ## Table of Contents
 
@@ -50,7 +50,7 @@
 
 #### iOS Setup
 
-You must call `[[FSQPMovementManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
+You must call `[[FSQMovementManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
 
 ```objc
 // AppDelegate.m
@@ -65,7 +65,7 @@ You must call `[[FSQPMovementManager sharedManager] configureWithConsumerKey:sec
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [[FSQPMovementManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
+  [[FSQMovementManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
                                                         secret:@"CONSUMER_SECRET"
                                                       delegate:nil
                                                     completion:nil];
