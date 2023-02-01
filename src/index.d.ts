@@ -97,10 +97,10 @@ export interface CurrentLocation {
   matchedGeofences: [GeofenceEvent]
 }
 
-export const UserInfoUserIdKey = "userId"
-export const UserInfoGenderKey = "gender"
-export const UserInfoBirthdayKey = "birthday"
-export type UserInfo = {[key: string]: string}
+export const UserInfoUserIdKey = 'userId'
+export const UserInfoGenderKey = 'gender'
+export const UserInfoBirthdayKey = 'birthday'
+export type UserInfo = { [key: string]: string }
 
 export interface MovementSdk {
   /**
@@ -126,7 +126,7 @@ export interface MovementSdk {
 
   /**
    * Generates a visit and optional nearby venues at the given location.
-   * 
+   *
    * @param latitude location latitude
    * @param longitude location longitude
    */
@@ -149,9 +149,9 @@ export interface MovementSdk {
   userInfo(): Promise<UserInfo>
 
   /**
-   * For applications utilizing the server-to-server method for visit notifications,  
+   * For applications utilizing the server-to-server method for visit notifications,
    * you can use this to pass through your own identifier to the notification endpoint call.
-   * 
+   *
    * @param persisted Set to true to persist the user info data.
    */
   setUserInfo(userInfo: UserInfo, persisted: boolean): void

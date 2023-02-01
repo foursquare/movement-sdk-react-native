@@ -48,7 +48,7 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    api 'com.foursquare:movementsdk:4.0.0-SNAPSHOT'
-    api 'com.foursquare:movementsdk-debugging:4.0.0-SNAPSHOT'
+    api 'com.foursquare:movementsdk:4.0.0-rc2'
+    api 'com.foursquare:movementsdk-debugging:4.0.0-rc2'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
 }

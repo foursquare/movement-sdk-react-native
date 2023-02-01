@@ -63,8 +63,8 @@ RCT_REMAP_METHOD(userInfo,
     resolve((NSDictionary *)[FSQMovementManager sharedManager].userInfo.source);
 }
 
-RCT_EXPORT_METHOD(setUserInfo:(NSDictionary *)userInfoDict persisted:(BOOL)persisted) {
-    [[FSQMovementManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfoDict] persisted:persisted];
+RCT_EXPORT_METHOD(setUserInfo:(NSDictionary *)userInfo persisted:(BOOL)persisted) {
+    [[FSQMovementManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfo] persisted:persisted];
 }
 
 @end
