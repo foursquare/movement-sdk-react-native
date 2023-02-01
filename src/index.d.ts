@@ -97,6 +97,11 @@ export interface CurrentLocation {
   matchedGeofences: [GeofenceEvent]
 }
 
+export const UserInfoUserIdKey = 'userId'
+export const UserInfoGenderKey = 'gender'
+export const UserInfoBirthdayKey = 'birthday'
+export type UserInfo = { [key: string]: string }
+
 export interface MovementSdk {
   /**
    * Returns a unique identifier that gets generated the first time this sdk runs on a specific device.
@@ -121,6 +126,9 @@ export interface MovementSdk {
 
   /**
    * Generates a visit and optional nearby venues at the given location.
+   *
+   * @param latitude location latitude
+   * @param longitude location longitude
    */
   fireTestVisit(latitude: number, longitude: number): void
 
@@ -133,6 +141,20 @@ export interface MovementSdk {
    * Is Movement SDK currently enabled.
    */
   isEnabled(): Promise<boolean>
+
+  /**
+   * For applications utilizing the server-to-server method for visit notifications,
+   * you can use this to pass through your own identifier to the notification endpoint call.
+   */
+  userInfo(): Promise<UserInfo>
+
+  /**
+   * For applications utilizing the server-to-server method for visit notifications,
+   * you can use this to pass through your own identifier to the notification endpoint call.
+   *
+   * @param persisted Set to true to persist the user info data.
+   */
+  setUserInfo(userInfo: UserInfo, persisted: boolean): void
 }
 
 declare let MovementSdk: MovementSdk
