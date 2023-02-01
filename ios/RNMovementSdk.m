@@ -3,6 +3,7 @@
 #import "RNMovementSdk.h"
 #import <Movement/Movement.h>
 #import "FSQCurrentLocation+JSON.h"
+#import "RCTConvert+FSQUserInfo.h"
 
 @implementation RNMovementSdk
 
@@ -56,4 +57,15 @@ RCT_REMAP_METHOD(isEnabled,
     resolve(@([[FSQMovementManager sharedManager] isEnabled]));
 }
 
+RCT_REMAP_METHOD(userInfo,
+                 userInfoWithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject) {
+    resolve((NSDictionary *)[FSQMovementManager sharedManager].userInfo.source);
+}
+
+RCT_EXPORT_METHOD(setUserInfo:(NSDictionary *)userInfoDict persisted:(BOOL)persisted) {
+    [[FSQMovementManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfoDict] persisted:persisted];
+}
+
 @end
+
