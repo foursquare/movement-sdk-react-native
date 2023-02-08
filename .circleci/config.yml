@@ -51,7 +51,7 @@ commands:
                 command: |
                   ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
                   android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
-                  curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":true}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
+                  curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":false}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
 jobs:
   lint:
     executor: node/default
