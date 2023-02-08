@@ -2,18 +2,56 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
 references:
-  tag_filter: &tag_filter
+  tag-filter: &tag-filter
     filters:
       branches:
         ignore: /.*/
       tags:
-        only: /^v\d+\.\d+\.\d+$/
-  beta_tag_filter: &beta_tag_filter
+        only:
+          - /^v\d+\.\d+\.\d+$/
+  beta-tag-filter: &beta-tag-filter
     filters:
       branches:
         ignore: /.*/
       tags:
         only: /^v\d+\.\d+\.\d+-beta\d+$/
+commands:
+  deploy:
+    parameters:
+      beta:
+        type: boolean
+        default: false
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+      - when:
+          condition: << parameters.beta >>
+          steps:
+            - run:
+                name: Publish package
+                command: npm publish --access public --tag beta
+            - run:
+                name: Publish Release on GitHub
+                command: |
+                  ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
+                  android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
+                  curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":true}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
+      - when:
+          condition:
+            not: << parameters.beta >>
+          steps:
+            - run:
+                name: Publish package
+                command: npm publish --access public
+            - run:
+                name: Publish Release on GitHub
+                command: |
+                  ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
+                  android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
+                  curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":true}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
 jobs:
   lint:
     executor: node/default
@@ -28,51 +66,30 @@ jobs:
   deploy-beta:
     executor: node/default
     steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
-      - run:
-          name: Publish package
-          command: npm publish --access public --tag beta
-      - run:
-          name: Publish Release on GitHub
-          command: |
-            ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
-            android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
-            curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":true}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
+      - deploy:
+          beta: true
   deploy:
     executor: node/default
     steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
-      - run:
-          name: Publish package
-          command: npm publish --access public
-      - run:
-          name: Publish Release on GitHub
-          command: |
-            ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
-            android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
-            curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":false}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
+      - deploy
 workflows:
   version: 2
   untagged-build:
     jobs:
       - lint
-  tagged-build:
+  deploy:
     jobs:
       - lint:
-          <<: *tag_filter
-      - deploy-beta:
-          requires:
-            - lint
-          <<: *beta_tag_filter
+          <<: *tag-filter
       - deploy:
           requires:
             - lint
-          <<: *tag_filter
+          <<: *tag-filter
+  deploy-beta:
+    jobs:
+      - lint:
+          <<: *beta-tag-filter
+      - deploy-beta:
+          requires:
+            - lint
+          <<: *beta-tag-filter
