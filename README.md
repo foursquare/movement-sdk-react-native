@@ -106,29 +106,26 @@ public class MainApplication extends Application implements ReactApplication {
 #### Basic Usage
 
 ```javascript
-import React, { Component } from 'react'
-import { Text } from 'react-native'
-import MovementSdk from '@foursquare/movement-sdk-react-native'
+import MovementSdk from '@foursquare/movement-sdk-react-native';
+import React, {useState, useEffect} from 'react';
+import {Text} from 'react-native';
 
-export default class Screen extends Component {
-  state = {
-    installId: '-',
-  }
+export default () => {
+  const [installId, setInstallId] = useState('-');
 
-  componentDidMount() {
-    MovementSdk.getInstallId().then((installId) => {
-      this.setState({ installId: installId })
-    })
-  }
+  useEffect(() => {
+    (async () => {
+      setInstallId(await MovementSdk.getInstallId());
+    })();
+  });
 
-  render() {
-    return (
-      <>
-        <Text>Install ID: {this.state.installId}</Text>
-      </>
-    )
-  }
-}
+  return (
+    <React.Fragment>
+      <Text>Install ID: {installId}</Text>
+    </React.Fragment>
+  );
+};
+
 ```
 
 ### Getting User's Current Location
@@ -136,46 +133,42 @@ export default class Screen extends Component {
 You can actively request the current location of the user by calling the `MovementSdk.getCurrentLocation` method. The return value will be a `Promise<CurrentLocation>`. The `CurrentLocation` object has the current venue the device is most likely at as well as any geofences that the device is in (if configured). More information [here](https://developer.foursquare.com/docs/pilgrim-sdk/quickstart#get-current-location). Example usage below:
 
 ```javascript
-import React, { Component } from 'react'
-import { Alert, Text } from 'react-native'
-import MovementSdk from '@foursquare/movement-sdk-react-native'
+import MovementSdk, {
+  CurrentLocation,
+} from '@foursquare/movement-sdk-react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, Text} from 'react-native';
 
-export default class Screen extends Component {
-  state = {
-    currentLocation: null,
-  }
+export default () => {
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation>();
 
-  getCurrentLocation = async function () {
-    try {
-      const currentLocation = await MovementSdk.getCurrentLocation()
-      this.setState({ currentLocation: currentLocation })
-    } catch (e) {
-      Alert.alert('Movement SDK', `${e}`)
-    }
-  }
+  useEffect(() => {
+    async () => {
+      try {
+        setCurrentLocation(await MovementSdk.getCurrentLocation());
+      } catch (e) {
+        Alert.alert('Movement SDK', `${e}`);
+      }
+    };
+  });
 
-  componentDidMount() {
-    this.getCurrentLocation()
+  if (currentLocation != null) {
+    const venue = currentLocation.currentPlace.venue;
+    const venueName = venue?.name || 'Unnamed venue';
+    return (
+      <React.Fragment>
+        <Text>Venue: {venueName}</Text>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Text>Loading...</Text>
+      </React.Fragment>
+    );
   }
+};
 
-  render() {
-    if (this.state.currentLocation != null) {
-      const venue = this.state.currentLocation.currentPlace.venue
-      const venueName = venue.name || 'Unnamed venue'
-      return (
-        <>
-          <Text>Venue: {venueName}</Text>
-        </>
-      )
-    } else {
-      return (
-        <>
-          <Text>Loading...</Text>
-        </>
-      )
-    }
-  }
-}
 ```
 
 ### Passive Location Detection
@@ -183,46 +176,34 @@ export default class Screen extends Component {
 Passive location detection is controlled with the `MovementSdk.start` and `MovementSdk.stop` methods. When started Movement SDK will send notifications to [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations). Example usage below:
 
 ```javascript
-import React, { Component } from 'react'
-import { Alert, Button } from 'react-native'
-import MovementSdk from '@foursquare/movement-sdk-react-native'
+import {Alert, Button} from 'react-native';
+import MovementSdk from '@foursquare/movement-sdk-react-native';
+import React from 'react';
 
-export default class Screen extends Component {
-  startMovement = async function () {
-    const canEnable = await MovementSdk.canEnable()
-    const isSupportedDevice = await MovementSdk.isSupportedDevice()
-    if (canEnable && isSupportedDevice) {
-      MovementSdk.start()
-      Alert.alert('Movement SDK', 'Movement SDK started')
+export default () => {
+  const startMovement = async function () {
+    const canEnable = await MovementSdk.isEnabled();
+    if (canEnable) {
+      MovementSdk.start();
+      Alert.alert('Movement SDK', 'Movement SDK started');
     } else {
-      Alert.alert('Movement SDK', 'Error starting')
+      Alert.alert('Movement SDK', 'Error starting');
     }
-  }
+  };
 
-  stopMovement = function () {
-    MovementSdk.stop()
-    Alert.alert('Movement SDK', 'Movement SDK stopped')
-  }
+  const stopMovement = function () {
+    MovementSdk.stop();
+    Alert.alert('Movement SDK', 'Movement SDK stopped');
+  };
 
-  render() {
-    return (
-      <>
-        <Button
-          title="Start"
-          onPress={() => {
-            this.startMovement()
-          }}
-        />
-        <Button
-          title="Stop"
-          onPress={() => {
-            this.stopMovement()
-          }}
-        />
-      </>
-    )
-  }
-}
+  return (
+    <React.Fragment>
+      <Button title="Start" onPress={() => startMovement()} />
+      <Button title="Stop" onPress={() => stopMovement()}
+      />
+    </React.Fragment>
+  );
+};
 ```
 
 ### Debug Screen
@@ -230,28 +211,22 @@ export default class Screen extends Component {
 The debug screen is shown using the `MovementSdk.showDebugScreen` method. This screen contains logs sent from the Movement SDK and other debugging tools/information. Example usage below:
 
 ```javascript
-import React, { Component } from 'react'
-import { Button } from 'react-native'
-import MovementSdk from '@foursquare/movement-sdk-react-native'
+import React, {Component} from 'react';
+import {Button} from 'react-native';
+import MovementSdk from '@foursquare/movement-sdk-react-native';
 
-export default class Screen extends Component {
-  showDebugScreen = function () {
-    MovementSdk.showDebugScreen()
-  }
+export default () => {
+  const showDebugScreen = function () {
+    MovementSdk.showDebugScreen();
+  };
 
-  render() {
-    return (
-      <>
-        <Button
-          title="Show Debug Screen"
-          onPress={() => {
-            this.showDebugScreen()
-          }}
-        />
-      </>
-    )
-  }
-}
+  return (
+    <React.Fragment>
+      <Button title="Show Debug Screen" onPress={() => showDebugScreen()} />
+    </React.Fragment>
+  );
+};
+
 ```
 
 ### Test Visits
@@ -259,41 +234,35 @@ export default class Screen extends Component {
 Test arrival visits can be fired with the method `MovementSdk.fireTestVisit`. You must pass a location to be used for the test visit. The arrival notification will be received via [Webhooks](https://developer.foursquare.com/docs/pilgrim-sdk/webhooks) and other [third-party integrations](https://developer.foursquare.com/docs/pilgrim-sdk/integrations)
 
 ```javascript
-import React, { Component } from 'react'
-import { Button } from 'react-native'
-import MovementSdk from '@foursquare/movement-sdk-react-native'
+import React from 'react';
+import {Alert, Button} from 'react-native';
+import MovementSdk from '@foursquare/movement-sdk-react-native';
 
-export default class Screen extends Component {
-  fireTestVisit = async function () {
+export default () => {
+  const fireTestVisit = async function () {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude
-        const longitude = position.coords.longitude
-        MovementSdk.fireTestVisit(latitude, longitude)
+      position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        MovementSdk.fireTestVisit(latitude, longitude);
         Alert.alert(
           'Movement SDK',
-          `Sent test visit with location: (${latitude},${longitude})`
-        )
+          `Sent test visit with location: (${latitude},${longitude})`,
+        );
       },
-      (err) => {
-        Alert.alert('Movement SDK', `${err}`)
-      }
-    )
-  }
+      err => {
+        Alert.alert('Movement SDK', `${err}`);
+      },
+    );
+  };
 
-  render() {
-    return (
-      <>
-        <Button
-          title="Fire Test Visit"
-          onPress={() => {
-            this.fireTestVisit()
-          }}
-        />
-      </>
-    )
-  }
-}
+  return (
+    <React.Fragment>
+      <Button title="Fire Test Visit" onPress={() => fireTestVisit()} />
+    </React.Fragment>
+  );
+};
+
 ```
 
 ## Samples
