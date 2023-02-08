@@ -1,7 +1,7 @@
 //  Copyright © 2023 Foursquare Labs. All rights reserved.
 
 #import "RNMovementSdk.h"
-#import <Movement/Movement.h>
+#import <MovementSdk/MovementSdk.h>
 #import "FSQCurrentLocation+JSON.h"
 #import "RCTConvert+FSQUserInfo.h"
 
@@ -17,21 +17,21 @@ RCT_EXPORT_MODULE();
 RCT_REMAP_METHOD(getInstallId,
                  getInstallIdWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([FSQMovementManager sharedManager].installId);
+    resolve([FSQMovementSdkManager sharedManager].installId);
 }
 
 RCT_EXPORT_METHOD(start) {
-    [[FSQMovementManager sharedManager] start];
+    [[FSQMovementSdkManager sharedManager] start];
 }
 
 RCT_EXPORT_METHOD(stop) {
-    [[FSQMovementManager sharedManager] stop];
+    [[FSQMovementSdkManager sharedManager] stop];
 }
 
 RCT_REMAP_METHOD(getCurrentLocation,
                  getCurrentLocationWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    [[FSQMovementManager sharedManager] getCurrentLocationWithCompletion:^(FSQCurrentLocation * _Nullable currentLocation, NSError * _Nullable error) {
+    [[FSQMovementSdkManager sharedManager] getCurrentLocationWithCompletion:^(FSQCurrentLocation * _Nullable currentLocation, NSError * _Nullable error) {
         if (error) {
             reject(@"get_current_location", error.localizedDescription, error);
             return;
@@ -42,29 +42,29 @@ RCT_REMAP_METHOD(getCurrentLocation,
 
 RCT_EXPORT_METHOD(fireTestVisit:(double)latitude longitude:(double)longitude) {
     CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-    [[FSQMovementManager sharedManager].visitTester fireTestVisit:location];
+    [[FSQMovementSdkManager sharedManager].visitTester fireTestVisit:location];
 }
 
 RCT_EXPORT_METHOD(showDebugScreen) {
-    [FSQMovementManager sharedManager].debugLogsEnabled = YES;
+    [FSQMovementSdkManager sharedManager].debugLogsEnabled = YES;
     UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [[FSQMovementManager sharedManager] presentDebugViewController:viewController];
+    [[FSQMovementSdkManager sharedManager] presentDebugViewController:viewController];
 }
 
 RCT_REMAP_METHOD(isEnabled,
                  isEnabledWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve(@([[FSQMovementManager sharedManager] isEnabled]));
+    resolve(@([[FSQMovementSdkManager sharedManager] isEnabled]));
 }
 
 RCT_REMAP_METHOD(userInfo,
                  userInfoWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve((NSDictionary *)[FSQMovementManager sharedManager].userInfo.source);
+    resolve((NSDictionary *)[FSQMovementSdkManager sharedManager].userInfo.source);
 }
 
 RCT_EXPORT_METHOD(setUserInfo:(NSDictionary *)userInfo persisted:(BOOL)persisted) {
-    [[FSQMovementManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfo] persisted:persisted];
+    [[FSQMovementSdkManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfo] persisted:persisted];
 }
 
 @end

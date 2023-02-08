@@ -1,6 +1,6 @@
 //  Copyright © 2023 Foursquare. All rights reserved.
 
-#import <Movement/Movement.h>
+#import <MovementSdk/MovementSdk.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
