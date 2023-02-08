@@ -42,13 +42,13 @@ repositories {
     }
     google()
     maven {
-        url 'https://foursquare.jfrog.io/foursquare/libs-release/'
+        url 'https://foursquare.jfrog.io/artifactory/libs-earlyaccess/'
     }
 }
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    api 'com.foursquare:movementsdk:4.0.0-rc2'
-    api 'com.foursquare:movementsdk-debugging:4.0.0-rc2'
+    api 'com.foursquare:movementsdk:4.0.0-beta2'
+    api 'com.foursquare:movementsdk-debugging:4.0.0-beta2'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
 }
