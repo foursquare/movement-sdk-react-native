@@ -8,6 +8,12 @@ references:
         ignore: /.*/
       tags:
         only: /^v\d+\.\d+\.\d+$/
+  beta_tag_filter: &beta_tag_filter
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v\d+\.\d+\.\d+-beta\d+$/
 jobs:
   lint:
     executor: node/default
@@ -19,6 +25,23 @@ jobs:
           root: .
           paths:
             - .
+  deploy-beta:
+    executor: node/default
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+      - run:
+          name: Publish package
+          command: npm publish --access public --tag beta
+      - run:
+          name: Publish Release on GitHub
+          command: |
+            ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
+            android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]-beta[[:digit:]]\)'/\1/")
+            curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":true}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
   deploy:
     executor: node/default
     steps:
@@ -33,9 +56,9 @@ jobs:
       - run:
           name: Publish Release on GitHub
           command: |
-            ios_version=$(sed -n "/s.dependency 'Pilgrim', '= [0-9].[0-9].[0-9]'/p" pilgrim-sdk-react-native.podspec | sed "s/  s.dependency 'Pilgrim', '= \([0-9].[0-9].[0-9]\)'/\1/")
-            android_version=$(sed -n "/implementation 'com.foursquare:pilgrimsdk:[0-9].[0-9].[0-9]'/p" android/build.gradle | sed "s/    implementation 'com.foursquare:pilgrimsdk:\([0-9].[0-9].[0-9]\)'/\1/")
-            curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":false}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/pilgrim-sdk-react-native/releases"
+            ios_version=$(sed -n "/s.dependency 'MovementSdk', '= [[:digit:]].[[:digit:]].[[:digit:]]'/p" movement-sdk-react-native.podspec | sed "s/  s.dependency 'MovementSdk', '= \([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
+            android_version=$(sed -n "/api 'com.foursquare:movementsdk:[[:digit:]].[[:digit:]].[[:digit:]]'/p" android/build.gradle | sed "s/    api 'com.foursquare:movementsdk:\([[:digit:]].[[:digit:]].[[:digit:]]\)'/\1/")
+            curl -s -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"name\":\"$CIRCLE_TAG\",\"body\":\"iOS SDK version: ${ios_version}\nAndroid SDK version: ${android_version}\",\"draft\":false,\"prerelease\":false}" -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/foursquare/movement-sdk-react-native/releases"
 workflows:
   version: 2
   untagged-build:
@@ -45,6 +68,10 @@ workflows:
     jobs:
       - lint:
           <<: *tag_filter
+      - deploy-beta:
+          requires:
+            - lint
+          <<: *beta_tag_filter
       - deploy:
           requires:
             - lint

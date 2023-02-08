@@ -1,12 +1,12 @@
 //  Copyright © 2023 Foursquare. All rights reserved.
 
-#import <CoreLocation/CoreLocation.h>
+#import <MovementSdk/MovementSdk.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CLLocation (JSON)
+@interface FSQUserInfo (JSON)
 
-- (NSDictionary *)json;
++ (instancetype)userInfoWithJSON:(id)json;
 
 @end
 

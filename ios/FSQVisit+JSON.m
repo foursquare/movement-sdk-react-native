@@ -1,10 +1,10 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
-#import "FSQPVisit+JSON.h"
+#import "FSQVisit+JSON.h"
 #import "CLLocation+JSON.h"
-#import "FSQPVenue+JSON.h"
+#import "FSQVenue+JSON.h"
 
-@implementation FSQPVisit (JSON)
+@implementation FSQVisit (JSON)
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
@@ -20,7 +20,7 @@
 
     NSMutableArray *otherPossibleVenuesArray = [NSMutableArray array];
     if (self.otherPossibleVenues) {
-        for (FSQPVenue *venue in self.otherPossibleVenues) {
+        for (FSQVenue *venue in self.otherPossibleVenues) {
             [otherPossibleVenuesArray addObject:[venue json]];
         }
     }

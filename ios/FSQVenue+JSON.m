@@ -1,10 +1,10 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
-#import "FSQPVenue+JSON.h"
-#import "FSQPCategory+JSON.h"
-#import "FSQPChain+JSON.h"
+#import "FSQVenue+JSON.h"
+#import "FSQCategory+JSON.h"
+#import "FSQChain+JSON.h"
 
-@implementation FSQPVenue (JSON)
+@implementation FSQVenue (JSON)
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
@@ -48,28 +48,28 @@
     }
 
     NSMutableArray *chainsArray = [NSMutableArray array];
-    for (FSQPChain *chain in self.chains) {
+    for (FSQChain *chain in self.chains) {
         [chainsArray addObject:[chain json]];
     }
     jsonDict[@"chains"] = chainsArray;
 
-    jsonDict[@"categories"] = [FSQPVenue categoriesArrayJson:self.categories];
+    jsonDict[@"categories"] = [FSQVenue categoriesArrayJson:self.categories];
 
     NSMutableArray *hierarchyArray = [NSMutableArray array];
-    for (FSQPVenue *venueParent in self.hierarchy) {
+    for (FSQVenue *venueParent in self.hierarchy) {
         NSMutableDictionary *venueParentDict = [NSMutableDictionary dictionary];
         venueParentDict[@"id"] = venueParent.foursquareID;
         venueParentDict[@"name"] = venueParent.name;
-        venueParentDict[@"categories"] = [FSQPVenue categoriesArrayJson:venueParent.categories];
+        venueParentDict[@"categories"] = [FSQVenue categoriesArrayJson:venueParent.categories];
     }
     jsonDict[@"hierarchy"] = hierarchyArray;
 
     return jsonDict;
 }
 
-+ (NSArray<NSDictionary *> *)categoriesArrayJson:(NSArray<FSQPCategory *> *)categories {
++ (NSArray<NSDictionary *> *)categoriesArrayJson:(NSArray<FSQCategory *> *)categories {
     NSMutableArray *categoriesArray = [NSMutableArray array];
-    for (FSQPCategory *category in categories) {
+    for (FSQCategory *category in categories) {
         [categoriesArray addObject:[category json]];
     }
     return categoriesArray;

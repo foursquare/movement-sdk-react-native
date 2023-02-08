@@ -1,10 +1,10 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
-#import "FSQPGeofenceEvent+JSON.h"
+#import "FSQGeofenceEvent+JSON.h"
 #import "CLLocation+JSON.h"
-#import "FSQPVenue+JSON.h"
+#import "FSQVenue+JSON.h"
 
-@implementation FSQPGeofenceEvent (JSON)
+@implementation FSQGeofenceEvent (JSON)
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
@@ -12,7 +12,7 @@
     jsonDict[@"name"] = self.name;
 
     if (self.venue != nil) {
-        FSQPVenue *venue = self.venue;
+        FSQVenue *venue = self.venue;
         jsonDict[@"venueId"] = venue.foursquareID;
         jsonDict[@"venue"] = [self.venue json];
     }

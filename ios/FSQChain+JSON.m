@@ -1,8 +1,8 @@
-//  Copyright © 2019 Foursquare. All rights reserved.
+//  Copyright © 2023 Foursquare. All rights reserved.
 
-#import "FSQPChain+JSON.h"
+#import "FSQChain+JSON.h"
 
-@implementation FSQPChain (JSON)
+@implementation FSQChain (JSON)
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];

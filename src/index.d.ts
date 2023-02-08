@@ -78,7 +78,7 @@ export interface VenueParent {
 }
 
 /**
- * Everything Pilgrim knows about a user's location, including raw data and a probable venue.
+ * Everything the Movement SDK knows about a user's location, including raw data and a probable venue.
  */
 export interface Visit {
   location?: Location
@@ -97,7 +97,12 @@ export interface CurrentLocation {
   matchedGeofences: [GeofenceEvent]
 }
 
-export interface PilgrimSdk {
+export const UserInfoUserIdKey = 'userId'
+export const UserInfoGenderKey = 'gender'
+export const UserInfoBirthdayKey = 'birthday'
+export type UserInfo = { [key: string]: string }
+
+export interface MovementSdk {
   /**
    * Returns a unique identifier that gets generated the first time this sdk runs on a specific device.
    */
@@ -121,19 +126,36 @@ export interface PilgrimSdk {
 
   /**
    * Generates a visit and optional nearby venues at the given location.
+   *
+   * @param latitude location latitude
+   * @param longitude location longitude
    */
   fireTestVisit(latitude: number, longitude: number): void
 
   /**
-   * Initializes a debug mode view controller for viewing PilgrimSDK logs and presents it.
+   * Initializes a debug mode view controller for viewing Movement SDK logs and presents it.
    */
   showDebugScreen(): void
 
   /**
-   * Is Pilgrim currently enabled.
+   * Is Movement SDK currently enabled.
    */
   isEnabled(): Promise<boolean>
+
+  /**
+   * For applications utilizing the server-to-server method for visit notifications,
+   * you can use this to pass through your own identifier to the notification endpoint call.
+   */
+  userInfo(): Promise<UserInfo>
+
+  /**
+   * For applications utilizing the server-to-server method for visit notifications,
+   * you can use this to pass through your own identifier to the notification endpoint call.
+   *
+   * @param persisted Set to true to persist the user info data.
+   */
+  setUserInfo(userInfo: UserInfo, persisted: boolean): void
 }
 
-declare let PilgrimSdk: PilgrimSdk
-export default PilgrimSdk
+declare let MovementSdk: MovementSdk
+export default MovementSdk

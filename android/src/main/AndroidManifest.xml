@@ -1,6 +1,3 @@
-
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.foursquare.pilgrim.react">
+<manifest package="com.foursquare.movement.react">
 
 </manifest>
-  
