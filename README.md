@@ -38,12 +38,6 @@
    cd ios && pod install && cd ..
    ```
 
-   Pre 0.60
-
-   ```bash
-   react-native link @foursquare/movement-sdk-react-native
-   ```
-
 ## Usage
 
 ### Application Setup
