@@ -50,7 +50,7 @@
 
 #### iOS Setup
 
-You must call `[[FSQMovementManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
+You must call `[[FSQMovementSdkManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
 
 ```objc
 // AppDelegate.m
@@ -65,10 +65,10 @@ You must call `[[FSQMovementManager sharedManager] configureWithConsumerKey:secr
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [[FSQMovementManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
-                                                        secret:@"CONSUMER_SECRET"
-                                                      delegate:nil
-                                                    completion:nil];
+  [[FSQMovementSdkManager sharedManager] configureWithConsumerKey:@"CONSUMER_KEY"
+                                                           secret:@"CONSUMER_SECRET"
+                                                         delegate:nil
+                                                       completion:nil];
 
 
   // Other react native initialization code
