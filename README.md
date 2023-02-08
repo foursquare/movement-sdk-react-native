@@ -30,9 +30,7 @@
    yarn add @foursquare/movement-sdk-react-native
    ```
 
-2. Link native code
-
-   With [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) (react-native 0.60+)
+2. Link native code with [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md)
 
    ```bash
    cd ios && pod install && cd ..
