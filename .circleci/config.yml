@@ -32,7 +32,7 @@ commands:
           steps:
             - run:
                 name: Publish package
-                command: npm publish --access public --tag beta --dry-run
+                command: npm publish --access public --tag beta
             - run:
                 name: Publish Release on GitHub
                 command: |
