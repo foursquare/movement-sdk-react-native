@@ -42,7 +42,7 @@
 
 #### iOS Setup
 
-You must call `[[FSQMovementSdkManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
+1. You must call `[[FSQMovementSdkManager sharedManager] configureWithConsumerKey:secret:delegate:completion:]` from `application:didFinishLaunchingWithOptions` in a your application delegate, for example:
 
 ```objc
 // AppDelegate.m
@@ -73,10 +73,15 @@ You must call `[[FSQMovementSdkManager sharedManager] configureWithConsumerKey:s
 @end
 
 ```
+> Don't forget to use your actual `CONSUMER_KEY` and `CONSUMER_SECRET`, which can be retrieved from your [Foursquare Developer Console](https://foursquare.com/developers/apps).
+
+This allows the SDK to run in the background and send you visit notifications, even when your iOS app isn't open.
+
+2. Ensure the `CFBundleIdentifier` of your project's `Info.plist` is correctly added to your Foursquare [Developer Console](https://foursquare.com/developers/apps/) app's iOS Bundle IDs setting. For more details on how to set this up, please refer to Pilgrim's [iOS Getting Started Guide](https://location.foursquare.com/developer/docs/ios-getting-started#1-register-app-bundle-id).
 
 #### Android Setup
 
-You must call `MovementSdk.with(MovementSdk.Builder)` from `onCreate` in a your `android.app.Application` subclass, for example:
+1. You must call `MovementSdk.with(MovementSdk.Builder)` from `onCreate` in a your `android.app.Application` subclass, for example:
 
 ```java
 // MainApplication.java
@@ -102,8 +107,27 @@ public class MainApplication extends Application implements ReactApplication {
 
 }
 ```
+> Don't forget to use your actual `CONSUMER_KEY` and `CONSUMER_SECRET`, which can be retrieved from your [Foursquare Developer Console](https://foursquare.com/developers/apps).
 
-#### Basic Usage
+This allows Pilgrim to run in the background and send you visit notifications, even when your Android app isn't open.
+
+2. In `android/app/build.gradle` modify the `signingConfigs` section to use your keystore file and ensure the `storePassword`, `keyAlias`, and `keyPassword` are set correctly:
+```text
+signingConfigs {
+     debug {
+       storeFile file('/path/to/file.keystore')
+       storePassword 'storePassword'
+       keyAlias 'keyAlias'
+       keyPassword 'keyPassword'
+     }
+   }
+```
+
+3. Ensure the `SHA1` key hash of your project is correctly added to your Foursquare [Developer Console](https://foursquare.com/developers/apps/) app's Android Key Hashes setting. For more details on how to set this up, please refer to Pilgrim's [Android Getting Started Guide](https://location.foursquare.com/developer/docs/android-getting-started#1-register-your-apps-key-hashes).
+
+### Get User's Install ID
+
+Each time the SDK is installed on a user's device, it creates a unique `installId`. The returned value will be a `Promise<string>`. This can be used to allow your users to submit [Data Erasure Requests](https://location.foursquare.com/developer/reference/erasure) or for debugging in our [Event Logs](https://location.foursquare.com/developer/docs/view-sdk-event-logs) tool in your developer console. Example usage:
 
 ```javascript
 import MovementSdk from '@foursquare/movement-sdk-react-native';
