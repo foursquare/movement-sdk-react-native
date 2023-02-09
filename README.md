@@ -302,4 +302,4 @@ export default () => {
 
 ## FAQ
 
-Consult Movement SDK documentation [here]([https://developer.foursquare.com/docs/pilgrim-sdk/FAQ](https://location.foursquare.com/developer/docs/movement-sdk-faqs))
+Consult Movement SDK documentation [here](https://location.foursquare.com/developer/docs/movement-sdk-faqs)
