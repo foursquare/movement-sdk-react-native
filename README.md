@@ -265,6 +265,37 @@ export default () => {
 
 ```
 
+### User Info
+
+For partners utilizing the server-to-server method for visit notifications, user info can be passed with the method `MovementSdk.setUserInfo`.
+
+```javascript
+import MovementSdk, {
+  UserInfoUserIdKey,
+  UserInfoGenderKey,
+  UserInfoBirthdayKey,
+  UserInfoGenderMale,
+} from '@foursquare/movement-sdk-react-native';
+import {useEffect} from 'react';
+
+export default () => {
+  useEffect(() => {
+    (async () => {
+      MovementSdk.setUserInfo(
+        {
+          [UserInfoUserIdKey]: 'userId',
+          [UserInfoGenderKey]: UserInfoGenderMale,
+          [UserInfoBirthdayKey]: new Date(2000, 0, 1).getTime(),
+          otherKey: 'otherVal',
+        },
+        true,
+      );
+    })();
+  }, []);
+};
+
+```
+
 ## Samples
 
 - [React Native Movement SDK Sample App](https://github.com/foursquare/RNMovementSample) - Basic application using movement-sdk-react-native
