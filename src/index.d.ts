@@ -97,10 +97,15 @@ export interface CurrentLocation {
   matchedGeofences: [GeofenceEvent]
 }
 
-export const UserInfoUserIdKey = 'userId'
-export const UserInfoGenderKey = 'gender'
-export const UserInfoBirthdayKey = 'birthday'
-export type UserInfo = { [key: string]: string }
+export declare const UserInfoUserIdKey: string // value is string
+export declare const UserInfoGenderKey: string // value is string
+export declare const UserInfoBirthdayKey: string // value is number
+
+export declare const UserInfoGenderMale: string
+export declare const UserInfoGenderFemale: string
+export declare const UserInfoGenderNotSpecified: string
+
+export type UserInfo = { [key: string]: string | number }
 
 export interface MovementSdk {
   /**

@@ -11,6 +11,7 @@ import com.foursquare.movement.MovementSdk
 import com.foursquare.movement.NotificationTester
 import com.foursquare.movement.UserInfo
 import com.foursquare.movement.debugging.DebugActivity
+import java.util.Date
 
 @Suppress("unused")
 class RNMovementSdkModule(private val reactContext: ReactApplicationContext) :
@@ -68,10 +69,19 @@ class RNMovementSdkModule(private val reactContext: ReactApplicationContext) :
     fun setUserInfo(userInfo: ReadableMap, persisted: Boolean) {
         MovementSdk.get().setUserInfo(UserInfo().apply {
             for (entry in userInfo.toHashMap().entries) {
-                val value = entry.value as String
                 when (entry.key) {
-                    "userId", "gender","birthday" -> setUserId(value)
-                    else -> this[entry.key] = value
+                    "userId" -> setUserId(entry.value as String)
+                    "gender" -> setGender(
+                        when (entry.value as String) {
+                            "male" -> UserInfo.Gender.MALE
+                            "female" -> UserInfo.Gender.FEMALE
+                            else -> UserInfo.Gender.NOT_SPECIFIED
+                        }
+                    )
+                    "birthday" -> {
+                        setBirthday(Date((entry.value as Double).toLong()))
+                    }
+                    else -> this[entry.key] = entry.value as String
                 }
             }
         }, persisted)
