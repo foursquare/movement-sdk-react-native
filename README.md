@@ -130,7 +130,7 @@ export default () => {
 
 ### Getting User's Current Location
 
-You can actively request the current location of the user by calling the `MovementSdk.getCurrentLocation` method. The return value will be a `Promise<CurrentLocation>`. The `CurrentLocation` object has the current venue the device is most likely at as well as any geofences that the device is in (if configured). More information [here](https://developer.foursquare.com/docs/pilgrim-sdk/quickstart#get-current-location). Example usage below:
+You can actively request the current location of the user by calling the `MovementSdk.getCurrentLocation` method. The return value will be a `Promise<CurrentLocation>`. The `CurrentLocation` object has the current venue the device is most likely at as well as any geofences that the device is in (if configured). More information [here](https://location.foursquare.com/developer/docs/movement-sdk-react-native-add-features#get-users-current-location). Example usage below:
 
 ```javascript
 import MovementSdk, {
