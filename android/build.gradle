@@ -42,7 +42,7 @@ repositories {
     }
     google()
     maven {
-        url 'https://foursquare.jfrog.io/artifactory/libs-earlyaccess/'
+        url 'https://foursquare.jfrog.io/artifactory/libs-release/'
     }
 }
 
