@@ -8,17 +8,17 @@
 
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
-    jsonDict[@"id"] = self.geofenceID;
+    jsonDict[@"geofenceId"] = self.geofenceId;
     jsonDict[@"name"] = self.name;
 
     if (self.venue != nil) {
         FSQVenue *venue = self.venue;
-        jsonDict[@"venueId"] = venue.foursquareID;
+        jsonDict[@"venueId"] = venue.venueId;
         jsonDict[@"venue"] = [self.venue json];
     }
 
-    if (self.partnerVenueID) {
-        jsonDict[@"partnerVenueId"] = self.partnerVenueID;
+    if (self.partnerVenueId) {
+        jsonDict[@"partnerVenueId"] = self.partnerVenueId;
     }
 
     jsonDict[@"location"] = [self.location json];
