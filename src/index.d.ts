@@ -7,7 +7,7 @@ export interface Location {
  * An object representing an interaction with one or more registered geofence radii.
  */
 export interface GeofenceEvent {
-  id: string
+  geofenceId: string
   name: string
   venueId?: string
   venue?: Venue

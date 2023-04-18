@@ -49,7 +49,7 @@ internal object Utils {
     }
 
     private fun geofenceEventJson(geofenceEvent: GeofenceEvent) = Arguments.createMap().apply {
-        putString("id", geofenceEvent.id)
+        putString("geofenceId", geofenceEvent.id)
         putString("name", geofenceEvent.name)
         geofenceEvent.venue?.let {
             geofenceEvent.venue

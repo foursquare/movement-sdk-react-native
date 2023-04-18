@@ -17,21 +17,21 @@ RCT_EXPORT_MODULE();
 RCT_REMAP_METHOD(getInstallId,
                  getInstallIdWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([FSQMovementSdkManager sharedManager].installId);
+    resolve([FSQMovementSdkManager shared].installId);
 }
 
 RCT_EXPORT_METHOD(start) {
-    [[FSQMovementSdkManager sharedManager] start];
+    [[FSQMovementSdkManager shared] start];
 }
 
 RCT_EXPORT_METHOD(stop) {
-    [[FSQMovementSdkManager sharedManager] stop];
+    [[FSQMovementSdkManager shared] stop];
 }
 
 RCT_REMAP_METHOD(getCurrentLocation,
                  getCurrentLocationWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    [[FSQMovementSdkManager sharedManager] getCurrentLocationWithCompletion:^(FSQCurrentLocation * _Nullable currentLocation, NSError * _Nullable error) {
+    [[FSQMovementSdkManager shared] getCurrentLocationWithCompletion:^(FSQCurrentLocation * _Nullable currentLocation, NSError * _Nullable error) {
         if (error) {
             reject(@"get_current_location", error.localizedDescription, error);
             return;
@@ -42,29 +42,31 @@ RCT_REMAP_METHOD(getCurrentLocation,
 
 RCT_EXPORT_METHOD(fireTestVisit:(double)latitude longitude:(double)longitude) {
     CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-    [[FSQMovementSdkManager sharedManager].visitTester fireTestVisit:location];
+    [[FSQMovementSdkManager shared].visitTester fireTestVisitWithLocation:location];
 }
 
 RCT_EXPORT_METHOD(showDebugScreen) {
-    [FSQMovementSdkManager sharedManager].debugLogsEnabled = YES;
+    [FSQMovementSdkManager shared].isDebugLogsEnabled = YES;
     UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [[FSQMovementSdkManager sharedManager] presentDebugViewController:viewController];
+    if (@available(iOS 14.0, *)) {
+        [[FSQMovementSdkManager shared] presentDebugViewControllerWithParentViewController:viewController];
+    }
 }
 
 RCT_REMAP_METHOD(isEnabled,
                  isEnabledWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve(@([[FSQMovementSdkManager sharedManager] isEnabled]));
+    resolve(@([[FSQMovementSdkManager shared] isEnabled]));
 }
 
 RCT_REMAP_METHOD(userInfo,
                  userInfoWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve((NSDictionary *)[FSQMovementSdkManager sharedManager].userInfo.source);
+    resolve((NSDictionary *)[FSQMovementSdkManager shared].userInfo.source);
 }
 
 RCT_EXPORT_METHOD(setUserInfo:(NSDictionary *)userInfo persisted:(BOOL)persisted) {
-    [[FSQMovementSdkManager sharedManager] setUserInfo:[RCTConvert FSQUserInfo:userInfo] persisted:persisted];
+    [[FSQMovementSdkManager shared] setUserInfo:[RCTConvert FSQUserInfo:userInfo] persisted:persisted];
 }
 
 @end

@@ -9,7 +9,7 @@
 - (NSDictionary *)json {
     NSMutableDictionary *jsonDict = [NSMutableDictionary dictionary];
 
-    jsonDict[@"id"] = self.foursquareID;
+    jsonDict[@"id"] = self.venueId;
     jsonDict[@"name"] = self.name;
 
     if (self.locationInformation) {
@@ -58,7 +58,7 @@
     NSMutableArray *hierarchyArray = [NSMutableArray array];
     for (FSQVenue *venueParent in self.hierarchy) {
         NSMutableDictionary *venueParentDict = [NSMutableDictionary dictionary];
-        venueParentDict[@"id"] = venueParent.foursquareID;
+        venueParentDict[@"id"] = venueParent.venueId;
         venueParentDict[@"name"] = venueParent.name;
         venueParentDict[@"categories"] = [FSQVenue categoriesArrayJson:venueParent.categories];
     }
