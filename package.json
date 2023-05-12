@@ -1,7 +1,7 @@
 {
   "name": "@foursquare/movement-sdk-react-native",
   "homepage": "https://enterprise.foursquare.com/products/pilgrim",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "React native wrapper for the Movement SDK",
   "main": "src/index.js",
   "scripts": {
