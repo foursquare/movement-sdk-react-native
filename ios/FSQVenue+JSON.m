@@ -61,6 +61,7 @@
         venueParentDict[@"id"] = venueParent.venueId;
         venueParentDict[@"name"] = venueParent.name;
         venueParentDict[@"categories"] = [FSQVenue categoriesArrayJson:venueParent.categories];
+        [hierarchyArray addObject:venueParentDict];
     }
     jsonDict[@"hierarchy"] = hierarchyArray;
 

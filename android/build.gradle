@@ -6,24 +6,28 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+def packageJson = new groovy.json.JsonSlurper().parse(file("../package.json"))
+def nativeAndroidVersion = packageJson.nativeSdkVersions.android
+
 android {
-    compileSdkVersion 33
+    namespace 'com.foursquare.movement.react'
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 34
         versionCode 1
-        versionName "1.2.0"
+        versionName "4.1.0"
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 }
@@ -48,7 +52,9 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    api 'com.foursquare:movementsdk:4.0.0'
-    api 'com.foursquare:movementsdk-debugging:4.0.0'
-    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+    api "com.foursquare:movementsdk:${nativeAndroidVersion}"
+    api("com.foursquare:movementsdk-debugging:${nativeAndroidVersion}") {
+        exclude group: 'com.android.support'
+    }
+    implementation 'androidx.core:core:1.12.0'
 }
