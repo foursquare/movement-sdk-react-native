@@ -47,9 +47,22 @@ RCT_EXPORT_METHOD(fireTestVisit:(double)latitude longitude:(double)longitude) {
 
 RCT_EXPORT_METHOD(showDebugScreen) {
     [FSQMovementSdkManager shared].isDebugLogsEnabled = YES;
-    UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    if (@available(iOS 14.0, *)) {
-        [[FSQMovementSdkManager shared] presentDebugViewControllerWithParentViewController:viewController];
+    UIViewController *viewController = nil;
+    for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+        if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        for (UIWindow *window in windowScene.windows) {
+            if (window.isKeyWindow) {
+                viewController = window.rootViewController;
+                break;
+            }
+        }
+        if (viewController) break;
+    }
+    if (viewController) {
+        if (@available(iOS 14.0, *)) {
+            [[FSQMovementSdkManager shared] presentDebugViewControllerWithParentViewController:viewController];
+        }
     }
 }
 

@@ -66,15 +66,15 @@ export interface Venue {
   locationInformation?: LocationInformation
   partnerVenueId?: string
   probability?: number
-  chains: [Chain]
-  categories: [Category]
-  hierarchy: [VenueParent]
+  chains: Chain[]
+  categories: Category[]
+  hierarchy: VenueParent[]
 }
 
 export interface VenueParent {
   id: string
   name: string
-  categories: [Category]
+  categories: Category[]
 }
 
 /**
@@ -86,7 +86,7 @@ export interface Visit {
   confidence: number
   arrivalTime?: number
   venue?: Venue
-  otherPossibleVenues?: [Venue]
+  otherPossibleVenues?: Venue[]
 }
 
 /**
@@ -94,7 +94,7 @@ export interface Visit {
  */
 export interface CurrentLocation {
   currentPlace: Visit
-  matchedGeofences: [GeofenceEvent]
+  matchedGeofences: GeofenceEvent[]
 }
 
 export declare const UserInfoUserIdKey: string // value is string
@@ -115,7 +115,7 @@ export interface MovementSdk {
 
   /**
    * Call this after configuring the SDK to start the SDK and begin receiving location updates.
-   * */
+   */
   start(): void
 
   /**
@@ -125,7 +125,7 @@ export interface MovementSdk {
 
   /**
    * Gets the current location of the user.
-   * This includes possibly a visit and and an array of geofences.
+   * This includes possibly a visit and an array of geofences.
    */
   getCurrentLocation(): Promise<CurrentLocation>
 

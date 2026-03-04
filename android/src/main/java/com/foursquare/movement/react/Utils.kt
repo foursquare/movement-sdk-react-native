@@ -52,8 +52,6 @@ internal object Utils {
         putString("geofenceId", geofenceEvent.id)
         putString("name", geofenceEvent.name)
         geofenceEvent.venue?.let {
-            geofenceEvent.venue
-            putString("name", it.name)
             putString("venueId", it.id)
             putMap("venue", venueJson(it))
         }
